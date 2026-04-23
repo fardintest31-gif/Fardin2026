@@ -1,0 +1,32 @@
+name: Ping Test Server
+on: workflow_dispatch
+
+jobs:
+  ping-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test Ping
+        run: |
+          echo "Telegram (HTTPS Check):" > ping-results.txt
+          curl -I https://web.telegram.org >> ping-results.txt 2>&1
+          echo "" >> ping-results.txt
+
+          echo "Pinterest:" >> ping-results.txt
+          ping -c 4 pinterest.com >> ping-results.txt 2>&1
+          echo "" >> ping-results.txt
+
+          echo "YouTube:" >> ping-results.txt
+          ping -c 4 youtube.com >> ping-results.txt 2>&1
+          echo "" >> ping-results.txt
+
+          echo "TikTok:" >> ping-results.txt
+          ping -c 4 tiktok.com >> ping-results.txt 2>&1
+          echo "" >> ping-results.txt
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ping-results
+          path: ping-results.txt
+          
