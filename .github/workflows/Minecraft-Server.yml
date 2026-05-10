@@ -1,0 +1,35 @@
+name: Download Minecraft 1.12.2 and Commit
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create download folder
+        run: mkdir -p downloads/minecraft-1.12.2
+
+      - name: Download Minecraft 1.12.2 server
+        run: |
+          curl -L "https://launcher.mojang.com/v1/objects/886945bfb2b978778c3a0288fd7fab09d315b25f/server.jar" \
+            -o downloads/minecraft-1.12.2/server-1.12.2.jar
+
+      - name: Download Minecraft 1.12.2 client
+        run: |
+          curl -L "https://launcher.mojang.com/v1/objects/0f275bc1547d01fa5f56ba34bdc87d981ee12daf/client.jar" \
+            -o downloads/minecraft-1.12.2/client-1.12.2.jar
+
+      - name: Commit files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add downloads/minecraft-1.12.2
+          git commit -m "Add Minecraft 1.12.2 files" || echo "No changes to commit"
+          git push
